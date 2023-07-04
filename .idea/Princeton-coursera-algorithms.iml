@@ -21,5 +21,6 @@
     <orderEntry type="library" exported="" name="algs4" level="project" />
     <orderEntry type="library" name="HelloWorld" level="project" />
     <orderEntry type="library" name="percolation" level="project" />
+    <orderEntry type="library" name="queues" level="project" />
   </component>
 </module>
