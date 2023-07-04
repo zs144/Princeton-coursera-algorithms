@@ -4,6 +4,8 @@
       <root url="file://$PROJECT_DIR$/percolation" />
     </CLASSES>
     <JAVADOC />
-    <SOURCES />
+    <SOURCES>
+      <root url="file://$PROJECT_DIR$/percolation" />
+    </SOURCES>
   </library>
 </component>
