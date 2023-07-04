@@ -2,52 +2,58 @@ import edu.princeton.cs.algs4.WeightedQuickUnionUF;
 
 public class Percolation {
     private final WeightedQuickUnionUF uf;
-    private boolean[] state;
-    private int[] bottom;
-    private final int length;
-    private int openCount;
+    private final int ROWS; // the length of rows
+    private final int COLS; // the number of columns
+    private final int HEAD_INDEX;
+    private final int TAIL_INDEX;
+    private int openCount; // the number of open sites in the grid
+    private boolean[] state; // state of each site in the grid
+    private int[] connectedBottomSite;
 
     // creates n-by-n grid, with all sites initially blocked
     public Percolation(int n) {
         if (n <= 0) {
             throw new IllegalArgumentException();
         }
+        ROWS = n;
+        COLS = n;
         openCount = 0;
-        length = n;
-        state = new boolean[n * n + 2]; // block = false, open = true
-        state[state.length - 2] = true;
-        state[state.length - 1] = true;
+        state = new boolean[n * n + 2]; // state: blocked = false, open = true
+        HEAD_INDEX = ROWS * COLS;
+        TAIL_INDEX = ROWS * COLS + 1;
+        state[HEAD_INDEX] = true; // state of the head is always ture
+        state[TAIL_INDEX] = true; // state of the tail is always true
 
-        uf = new WeightedQuickUnionUF(length * length + 2);
-        for (int col = 1; col <= length; col++) {
-            uf.union(length * length, indexOfSite(1, col));
+        uf = new WeightedQuickUnionUF(ROWS * COLS + 2);
+        for (int col = 1; col <= COLS; col++) { // NOTE: the grid is 1-indexed.
+            uf.union(HEAD_INDEX, indexOfSite(1, col)); // connect top row with head
         }
-        bottom = new int[n * n + 2];
-        for (int col = 1; col <= length; col++) {
-            bottom[indexOfSite(length, col)] = col;
+        connectedBottomSite = new int[n * n + 2];
+        for (int col = 1; col <= COLS; col++) {
+            connectedBottomSite[indexOfSite(ROWS, col)] = col;
         }
     }
 
     private boolean isInBound(int row, int col) {
-        return (row <= length && col <= length && row > 0 && col > 0);
+        return (row <= ROWS && col <= COLS && row > 0 && col > 0);
     }
 
     private int indexOfSite(int row, int col) {
         if (!isInBound(row, col)) {
             throw new IllegalArgumentException();
         }
-        return (row - 1) * length + col - 1;
+        return (row - 1) * COLS + col - 1;
     }
 
-    private void updateBottom(int p, int q) {
+    private void unionBottomSite(int p, int q) {
         int pRoot = uf.find(p);
         int qRoot = uf.find(q);
         if (pRoot == qRoot) return;
-        if (bottom[pRoot] != 0) {
-            bottom[qRoot] = bottom[pRoot];
+        if (connectedBottomSite[pRoot] != 0) {
+            connectedBottomSite[qRoot] = connectedBottomSite[pRoot];
         }
         else {
-            bottom[pRoot] = bottom[qRoot];
+            connectedBottomSite[pRoot] = connectedBottomSite[qRoot];
         }
     }
 
@@ -63,30 +69,26 @@ public class Percolation {
         if (!isOpen(row, col)) {
             state[indexOfSite(row, col)] = true;
             openCount++;
-            if (length == 1 && isFull(row, col)) {
-                updateBottom(indexOfSite(row, col), length * length + 1);
-                uf.union(length * length + 1, indexOfSite(row, col));
+            if (ROWS == 1 && isFull(row, col)) {
+                unionBottomSite(indexOfSite(row, col), TAIL_INDEX);
+                uf.union(TAIL_INDEX, indexOfSite(row, col));
+                return;
             }
-            if (isInBound(row + 1, col) && isOpen(row + 1, col)) {
-                updateBottom(indexOfSite(row, col), indexOfSite(row + 1, col));
-                uf.union(indexOfSite(row, col), indexOfSite(row + 1, col));
+            int[][] neighbors = new int[4][2];
+            neighbors = new int[][]{{row + 1, col}, {row - 1, col},
+                                    {row, col + 1}, {row, col - 1}};
+            for (int[] neighbor : neighbors) {
+                int neighborRow = neighbor[0];
+                int neighborCol = neighbor[1];
+                if (isInBound(neighborRow, neighborCol) && isOpen(neighborRow, neighborCol)) {
+                    unionBottomSite(indexOfSite(row, col), indexOfSite(neighborRow, neighborCol));
+                    uf.union(indexOfSite(row, col), indexOfSite(neighborRow, neighborCol));
+                }
             }
-            if (isInBound(row - 1, col) && isOpen(row - 1, col)) {
-                updateBottom(indexOfSite(row, col), indexOfSite(row - 1, col));
-                uf.union(indexOfSite(row, col), indexOfSite(row - 1, col));
-            }
-            if (isInBound(row, col + 1) && isOpen(row, col + 1)) {
-                updateBottom(indexOfSite(row, col), indexOfSite(row, col + 1));
-                uf.union(indexOfSite(row, col), indexOfSite(row, col + 1));
-            }
-            if (isInBound(row, col - 1) && isOpen(row, col - 1)) {
-                updateBottom(indexOfSite(row, col), indexOfSite(row, col - 1));
-                uf.union(indexOfSite(row, col), indexOfSite(row, col - 1));
-            }
-            int bottomCol = bottom[uf.find(indexOfSite(row, col))];
-            if (bottomCol != 0 && isFull(length, bottomCol)) {
-                updateBottom(indexOfSite(length, bottomCol), length * length + 1);
-                uf.union(length * length + 1, indexOfSite(length, bottomCol));
+            int bottomCol = connectedBottomSite[uf.find(indexOfSite(row, col))];
+            if (bottomCol != 0 && isFull(ROWS, bottomCol)) {
+                unionBottomSite(indexOfSite(ROWS, bottomCol), TAIL_INDEX);
+                uf.union(indexOfSite(ROWS, bottomCol), TAIL_INDEX);
             }
         }
     }
@@ -101,7 +103,7 @@ public class Percolation {
 
     // is the site (row, col) full?
     public boolean isFull(int row, int col) {
-        return isConnected(indexOfSite(row, col), length * length);
+        return isConnected(indexOfSite(row, col), HEAD_INDEX);
     }
 
     // returns the number of open sites
@@ -111,6 +113,6 @@ public class Percolation {
 
     // does the system percolate?
     public boolean percolates() {
-        return isConnected(length * length, length * length + 1);
+        return isConnected(HEAD_INDEX, TAIL_INDEX);
     }
 }
