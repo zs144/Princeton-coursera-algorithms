@@ -20,7 +20,7 @@ public class PercolationStats {
                 while (simulation.isOpen(row, col)) {
                     row = StdRandom.uniformInt(1, n + 1);
                     col = StdRandom.uniformInt(1, n + 1);
-                }
+                } // now a blocked site is found
                 simulation.open(row, col);
             }
             records[i] = (double) simulation.numberOfOpenSites() / (n * n);

@@ -4,6 +4,8 @@
       <root url="file://$PROJECT_DIR$/queues" />
     </CLASSES>
     <JAVADOC />
-    <SOURCES />
+    <SOURCES>
+      <root url="file://$PROJECT_DIR$/queues" />
+    </SOURCES>
   </library>
 </component>

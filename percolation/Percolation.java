@@ -51,8 +51,7 @@ public class Percolation {
         if (pRoot == qRoot) return;
         if (connectedBottomSite[pRoot] != 0) {
             connectedBottomSite[qRoot] = connectedBottomSite[pRoot];
-        }
-        else {
+        } else {
             connectedBottomSite[pRoot] = connectedBottomSite[qRoot];
         }
     }

@@ -22,5 +22,6 @@
     <orderEntry type="library" name="HelloWorld" level="project" />
     <orderEntry type="library" name="percolation" level="project" />
     <orderEntry type="library" name="queues" level="project" />
+    <orderEntry type="library" name="collinearPoints" level="project" />
   </component>
 </module>

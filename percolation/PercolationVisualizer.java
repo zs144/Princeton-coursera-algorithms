@@ -1,26 +1,26 @@
-/******************************************************************************
- *  Compilation:  javac PercolationVisualizer.java
- *  Execution:    java PercolationVisualizer input.txt
- *  Dependencies: Percolation.java
- *
+import edu.princeton.cs.algs4.In;
+import edu.princeton.cs.algs4.StdDraw;
+import java.awt.Font;
+
+/**
+ *  Compilation:  javac PercolationVisualizer.java <br>
+ *  Execution:    java PercolationVisualizer input.txt <br>
+ *  Dependencies: Percolation.java <br>
+ *  <br>
+ *  <p>
  *  This program takes the name of a file as a command-line argument.
  *  From that file, it
- *
- *    - Reads the grid size n of the percolation system.
- *    - Creates an n-by-n grid of sites (initially all blocked)
- *    - Reads in a sequence of sites (row i, column j) to open.
+ *  <ul>
+ *      <li>Reads the grid size n of the percolation system.</li>
+ *      <li>Creates an n-by-n grid of sites (initially all blocked)</li>
+ *      <li>Reads in a sequence of sites (row i, column j) to open.</li>
+ *  </ul>
  *
  *  After each site is opened, it draws full sites in light blue,
  *  open sites (that aren't full) in white, and blocked sites in black,
  *  with with site (1, 1) in the upper left-hand corner.
  *
- ******************************************************************************/
-
-import edu.princeton.cs.algs4.In;
-import edu.princeton.cs.algs4.StdDraw;
-
-import java.awt.Font;
-
+ */
 public class PercolationVisualizer {
 
     // delay in milliseconds (controls animation speed)
