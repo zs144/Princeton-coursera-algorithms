@@ -4,6 +4,8 @@
       <root url="file://$PROJECT_DIR$/collinearPoints" />
     </CLASSES>
     <JAVADOC />
-    <SOURCES />
+    <SOURCES>
+      <root url="file://$PROJECT_DIR$/collinearPoints" />
+    </SOURCES>
   </library>
 </component>
