@@ -15,11 +15,11 @@ public class PercolationStats {
         for (int i = 0; i < records.length; i++) {
             Percolation simulation = new Percolation(n);
             while (!simulation.percolates()) {
-                int row = StdRandom.uniform(1, n + 1);
-                int col = StdRandom.uniform(1, n + 1);
+                int row = StdRandom.uniformInt(1, n + 1);
+                int col = StdRandom.uniformInt(1, n + 1);
                 while (simulation.isOpen(row, col)) {
-                    row = StdRandom.uniform(1, n + 1);
-                    col = StdRandom.uniform(1, n + 1);
+                    row = StdRandom.uniformInt(1, n + 1);
+                    col = StdRandom.uniformInt(1, n + 1);
                 }
                 simulation.open(row, col);
             }
